@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" width="240" height="60">
+  <defs>
+    <linearGradient id="logoIconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Icon Box -->
+  <rect x="4" y="6" width="48" height="48" rx="14" fill="url(#logoIconGrad)" />
+  
+  <!-- Stationery & Register Icon inside -->
+  <!-- Register body -->
+  <rect x="14" y="24" width="28" height="20" rx="3" fill="#ffffff" />
+  <rect x="17" y="27" width="22" height="9" rx="1" fill="#0f172a" />
+  <rect x="19" y="29" width="10" height="2" rx="0.5" fill="#22c55e" />
+  
+  <!-- Pencil diagonally on top -->
+  <g transform="translate(34, 10) rotate(42)">
+    <polygon points="0,0 6,0 6,24 0,24" fill="#fbbf24" />
+    <rect x="0" y="24" width="6" height="5" rx="1" fill="#f43f5e" />
+    <polygon points="0,0 6,0 3,-6" fill="#fde68a" />
+    <polygon points="2,-4 4,-4 3,-6" fill="#0f172a" />
+  </g>
+
+  <!-- Typography -->
+  <text x="64" y="32" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="22" font-weight="800" fill="#0f172a" letter-spacing="0.5">ATK <tspan fill="#2563eb">POS</tspan></text>
+  <text x="65" y="46" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="10" font-weight="500" fill="#64748b" letter-spacing="0.2">KASIR &amp; STOK ALAT TULIS</text>
+</svg>
+
