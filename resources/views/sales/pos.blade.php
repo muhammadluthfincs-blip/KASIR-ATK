@@ -8,20 +8,89 @@
 <style>
     .pos-product-card {
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         border: 1px solid #e2e8f0;
-        border-radius: 10px;
+        border-radius: 12px;
         background: #ffffff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        padding: 14px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
     }
     .pos-product-card:hover:not(.disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(37, 99, 235, 0.12);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.12);
         border-color: #3b82f6;
     }
     .pos-product-card.disabled {
-        opacity: 0.6;
+        opacity: 0.55;
         cursor: not-allowed;
         background-color: #f8fafc;
+        border-color: #e2e8f0;
+    }
+    .pos-product-title {
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 2.6em;
+        margin-bottom: 4px;
+    }
+    .pos-product-price {
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: #2563eb;
+        line-height: 1.2;
+    }
+    .pos-add-btn {
+        font-size: 0.76rem;
+        padding: 5px 10px;
+        border-radius: 6px;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+    }
+    .pos-product-card:hover:not(.disabled) .pos-add-btn {
+        background-color: #2563eb;
+        color: #ffffff;
+        border-color: #2563eb;
+    }
+    .product-grid-container {
+        max-height: calc(100vh - 250px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 4px;
+    }
+    .product-grid-container::-webkit-scrollbar {
+        width: 6px;
+    }
+    .product-grid-container::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 6px;
+    }
+    .product-grid-container::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 6px;
+    }
+    .product-grid-container::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+    #categoryPills::-webkit-scrollbar {
+        height: 5px;
+    }
+    #categoryPills::-webkit-scrollbar-track {
+        background: #f8fafc;
+        border-radius: 4px;
+    }
+    #categoryPills::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
     }
     .category-pill {
         cursor: pointer;
@@ -33,6 +102,7 @@
         border: 1px solid #e2e8f0;
         background: #ffffff;
         color: #475569;
+        flex-shrink: 0;
     }
     .category-pill:hover {
         background: #f1f5f9;
@@ -74,7 +144,7 @@
 @section('content')
 <div class="row g-3">
     <!-- Left Column: Product Search & Catalog -->
-    <div class="col-xl-7 col-lg-6">
+    <div class="col-xxl-8 col-xl-7 col-lg-7 col-12">
         <!-- Search & Barcode Input -->
         <div class="card mb-3 shadow-sm">
             <div class="card-body p-3">
@@ -98,49 +168,66 @@
             @endforeach
         </div>
 
-        <!-- Product Grid -->
-        <div class="row g-2 overflow-auto" style="max-height: calc(100vh - 280px);" id="productGrid">
-            @foreach($products as $prod)
-            <div class="col-xxl-4 col-sm-6 col-12 product-item"
-                 data-id="{{ $prod->id }}"
-                 data-nama="{{ strtolower($prod->nama_barang) }}"
-                 data-kode="{{ strtolower($prod->kode_barang) }}"
-                 data-barcode="{{ strtolower($prod->barcode) }}"
-                 data-category="{{ $prod->category_id }}"
-                 data-harga="{{ $prod->harga_jual }}"
-                 data-stok="{{ $prod->stok }}"
-                 data-satuan="{{ $prod->satuan }}">
-                <div class="pos-product-card p-3 h-100 d-flex flex-direction-column justify-content-between {{ $prod->stok <= 0 ? 'disabled' : '' }}" onclick="addToCart({{ $prod->id }})">
-                    <div>
-                        <div class="d-flex justify-content-between align-items-start mb-1">
-                            <span class="badge bg-light text-secondary border font-monospace" style="font-size: 0.7rem;">
-                                {{ $prod->kode_barang }}
-                            </span>
-                            <span class="badge {{ $prod->stok <= 0 ? 'bg-danger' : ($prod->stok <= $prod->stok_minimum ? 'bg-warning text-dark' : 'bg-success bg-opacity-10 text-success') }}" style="font-size: 0.7rem;">
-                                Stok: {{ $prod->stok }}
-                            </span>
+        <!-- Product Grid Wrapped Container -->
+        <div class="product-grid-container pe-1">
+            <div class="row g-2" id="productGrid">
+                @foreach($products as $prod)
+                <div class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 product-item"
+                     data-id="{{ $prod->id }}"
+                     data-nama="{{ strtolower($prod->nama_barang) }}"
+                     data-kode="{{ strtolower($prod->kode_barang) }}"
+                     data-barcode="{{ strtolower($prod->barcode) }}"
+                     data-category="{{ $prod->category_id }}"
+                     data-harga="{{ $prod->harga_jual }}"
+                     data-stok="{{ $prod->stok }}"
+                     data-satuan="{{ $prod->satuan }}">
+                    <div class="pos-product-card {{ $prod->stok <= 0 ? 'disabled' : '' }}" onclick="addToCart({{ $prod->id }})">
+                        <div>
+                            <!-- Header: Code & Stock -->
+                            <div class="d-flex justify-content-between align-items-center gap-1 mb-2">
+                                <span class="badge bg-light text-secondary border font-monospace" style="font-size: 0.7rem;">
+                                    {{ $prod->kode_barang }}
+                                </span>
+                                <span class="badge {{ $prod->stok <= 0 ? 'bg-danger' : ($prod->stok <= $prod->stok_minimum ? 'bg-warning text-dark' : 'bg-success bg-opacity-10 text-success border border-success border-opacity-25') }}" style="font-size: 0.7rem;">
+                                    Stok: {{ $prod->stok }}
+                                </span>
+                            </div>
+
+                            <!-- Title (2-line clamp) -->
+                            <h6 class="pos-product-title" title="{{ $prod->nama_barang }}">
+                                {{ $prod->nama_barang }}
+                            </h6>
+
+                            <!-- Category -->
+                            <div class="mb-2">
+                                <span class="badge bg-light text-muted border fw-normal" style="font-size: 0.72rem;">
+                                    {{ $prod->category->name ?? '-' }}
+                                </span>
+                            </div>
                         </div>
-                        <h6 class="fw-bold text-dark mb-1 text-truncate" title="{{ $prod->nama_barang }}">
-                            {{ $prod->nama_barang }}
-                        </h6>
-                        <small class="text-muted d-block mb-2" style="font-size: 0.75rem;">{{ $prod->category->name ?? '-' }}</small>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
-                        <span class="fw-bold text-primary fs-6">
-                            Rp {{ number_format($prod->harga_jual, 0, ',', '.') }}
-                        </span>
-                        <span class="btn btn-sm btn-light border text-primary p-1 px-2" style="font-size: 0.75rem;">
-                            <i class="fa-solid fa-plus"></i> Tambah
-                        </span>
+
+                        <!-- Footer: Price & Add Button -->
+                        <div class="d-flex justify-content-between align-items-center pt-2 mt-2 border-top">
+                            <div>
+                                <span class="text-muted d-block lh-1" style="font-size: 0.68rem; text-transform: uppercase;">Harga</span>
+                                <span class="pos-product-price">
+                                    Rp {{ number_format($prod->harga_jual, 0, ',', '.') }}
+                                </span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary pos-add-btn d-flex align-items-center gap-1 shadow-sm" {{ $prod->stok <= 0 ? 'disabled' : '' }}>
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Tambah</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
     </div>
 
     <!-- Right Column: Shopping Cart & Checkout -->
-    <div class="col-xl-5 col-lg-6">
+    <div class="col-xxl-4 col-xl-5 col-lg-5 col-12">
         <div class="card shadow-sm h-100 d-flex flex-column">
             <!-- Cart Header -->
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
