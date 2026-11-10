@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <div class="d-flex align-items-center gap-4">
+            <div class="d-flex align-items-center flex-wrap gap-2 gap-md-4">
                 <div class="text-end">
                     <span class="small text-muted d-block">Sisa Stok Fisik Saat Ini:</span>
                     <span class="fs-4 fw-bold font-monospace {{ $product->stok <= 0 ? 'text-danger' : ($product->stok <= $product->stok_minimum ? 'text-warning' : 'text-success') }}">

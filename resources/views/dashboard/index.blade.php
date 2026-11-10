@@ -7,90 +7,90 @@
 @section('content')
 <div class="row g-3 mb-4">
     <!-- Stat 1: Total Produk -->
-    <div class="col-xl-2 col-md-4 col-6">
-        <div class="card stat-card bg-white h-100">
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <div class="card stat-card bg-white h-100 shadow-sm">
             <div class="d-flex align-items-center justify-content-between mb-2">
-                <span class="text-muted small fw-semibold">Total Produk</span>
+                <span class="text-muted small fw-semibold text-truncate">Total Produk</span>
                 <div class="stat-icon bg-primary bg-opacity-10 text-primary">
                     <i class="fa-solid fa-boxes-stacked"></i>
                 </div>
             </div>
-            <h3 class="fw-bold mb-1">{{ number_format($totalProducts) }}</h3>
-            <span class="text-muted" style="font-size: 0.78rem;">Jenis barang ATK aktif</span>
+            <h3 class="fw-bold mb-1" style="font-size: clamp(1.25rem, 1.35vw, 1.55rem);">{{ number_format($totalProducts) }}</h3>
+            <span class="text-muted d-block text-truncate" style="font-size: 0.76rem;">Jenis barang ATK aktif</span>
         </div>
     </div>
 
     <!-- Stat 2: Total Stok -->
-    <div class="col-xl-2 col-md-4 col-6">
-        <div class="card stat-card bg-white h-100">
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <div class="card stat-card bg-white h-100 shadow-sm">
             <div class="d-flex align-items-center justify-content-between mb-2">
-                <span class="text-muted small fw-semibold">Total Stok</span>
+                <span class="text-muted small fw-semibold text-truncate">Total Stok</span>
                 <div class="stat-icon bg-info bg-opacity-10 text-info">
                     <i class="fa-solid fa-cubes"></i>
                 </div>
             </div>
-            <h3 class="fw-bold mb-1">{{ number_format($totalStock) }}</h3>
-            <span class="text-muted" style="font-size: 0.78rem;">Unit fisik di gudang/toko</span>
+            <h3 class="fw-bold mb-1" style="font-size: clamp(1.25rem, 1.35vw, 1.55rem);">{{ number_format($totalStock) }}</h3>
+            <span class="text-muted d-block text-truncate" style="font-size: 0.76rem;">Unit fisik di gudang/toko</span>
         </div>
     </div>
 
     <!-- Stat 3: Transaksi Hari Ini -->
-    <div class="col-xl-2 col-md-4 col-6">
-        <div class="card stat-card bg-white h-100">
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <div class="card stat-card bg-white h-100 shadow-sm">
             <div class="d-flex align-items-center justify-content-between mb-2">
-                <span class="text-muted small fw-semibold">Transaksi Hari Ini</span>
+                <span class="text-muted small fw-semibold text-truncate">Transaksi Hari Ini</span>
                 <div class="stat-icon bg-success bg-opacity-10 text-success">
                     <i class="fa-solid fa-receipt"></i>
                 </div>
             </div>
-            <h3 class="fw-bold mb-1">{{ number_format($totalTrxToday) }}</h3>
-            <span class="text-muted" style="font-size: 0.78rem;">Struk penjualan hari ini</span>
+            <h3 class="fw-bold mb-1" style="font-size: clamp(1.25rem, 1.35vw, 1.55rem);">{{ number_format($totalTrxToday) }}</h3>
+            <span class="text-muted d-block text-truncate" style="font-size: 0.76rem;">Struk penjualan hari ini</span>
         </div>
     </div>
 
     <!-- Stat 4: Pendapatan Hari Ini -->
-    <div class="col-xl-2 col-md-4 col-6">
-        <div class="card stat-card bg-white h-100">
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <div class="card stat-card bg-white h-100 shadow-sm">
             <div class="d-flex align-items-center justify-content-between mb-2">
-                <span class="text-muted small fw-semibold">Omset Hari Ini</span>
-                <div class="stat-icon bg-indigo bg-opacity-10 text-primary">
+                <span class="text-muted small fw-semibold text-truncate">Omset Hari Ini</span>
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary">
                     <i class="fa-solid fa-rupiah-sign"></i>
                 </div>
             </div>
-            <h4 class="fw-bold mb-1 text-truncate" title="Rp {{ number_format($totalRevenueToday, 0, ',', '.') }}">
+            <h4 class="fw-bold mb-1 text-truncate" style="font-size: clamp(1.15rem, 1.2vw, 1.45rem);" title="Rp {{ number_format($totalRevenueToday, 0, ',', '.') }}">
                 Rp {{ number_format($totalRevenueToday, 0, ',', '.') }}
             </h4>
-            <span class="text-muted" style="font-size: 0.78rem;">Penerimaan kas hari ini</span>
+            <span class="text-muted d-block text-truncate" style="font-size: 0.76rem;">Penerimaan kas hari ini</span>
         </div>
     </div>
 
     <!-- Stat 5: Keuntungan Kotor Hari Ini -->
-    <div class="col-xl-2 col-md-4 col-6">
-        <div class="card stat-card bg-white h-100 border-start border-4 border-success">
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <div class="card stat-card bg-white h-100 border-start border-4 border-success shadow-sm">
             <div class="d-flex align-items-center justify-content-between mb-2">
-                <span class="text-muted small fw-semibold">Laba Kotor</span>
+                <span class="text-muted small fw-semibold text-truncate">Laba Kotor</span>
                 <div class="stat-icon bg-success bg-opacity-10 text-success">
                     <i class="fa-solid fa-chart-line-up"></i>
                 </div>
             </div>
-            <h4 class="fw-bold mb-1 text-success text-truncate" title="Rp {{ number_format($netProfitToday, 0, ',', '.') }}">
+            <h4 class="fw-bold mb-1 text-success text-truncate" style="font-size: clamp(1.15rem, 1.2vw, 1.45rem);" title="Rp {{ number_format($netProfitToday, 0, ',', '.') }}">
                 Rp {{ number_format($netProfitToday, 0, ',', '.') }}
             </h4>
-            <span class="text-muted" style="font-size: 0.78rem;">Penjualan - HPP modal</span>
+            <span class="text-muted d-block text-truncate" style="font-size: 0.76rem;">Penjualan - HPP modal</span>
         </div>
     </div>
 
     <!-- Stat 6: Stok Menipis -->
-    <div class="col-xl-2 col-md-4 col-6">
-        <div class="card stat-card bg-white h-100 border-start border-4 border-warning">
+    <div class="col-xxl-2 col-xl-4 col-md-4 col-sm-6 col-12">
+        <div class="card stat-card bg-white h-100 border-start border-4 border-warning shadow-sm">
             <div class="d-flex align-items-center justify-content-between mb-2">
-                <span class="text-muted small fw-semibold">Stok Menipis</span>
+                <span class="text-muted small fw-semibold text-truncate">Stok Menipis</span>
                 <div class="stat-icon bg-warning bg-opacity-10 text-warning">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
             </div>
-            <h3 class="fw-bold mb-1 text-warning">{{ number_format($lowStockCount) }}</h3>
-            <span class="text-muted" style="font-size: 0.78rem;">Barang butuh restock</span>
+            <h3 class="fw-bold mb-1 text-warning" style="font-size: clamp(1.25rem, 1.35vw, 1.55rem);">{{ number_format($lowStockCount) }}</h3>
+            <span class="text-muted d-block text-truncate" style="font-size: 0.76rem;">Barang butuh restock</span>
         </div>
     </div>
 </div>
@@ -98,33 +98,37 @@
 <!-- Charts Section -->
 <div class="row g-3 mb-4">
     <!-- Chart 1: Penjualan 7 Hari Terakhir -->
-    <div class="col-lg-7">
-        <div class="card h-100">
+    <div class="col-lg-7 col-12">
+        <div class="card h-100 shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
                     <i class="fa-solid fa-chart-area text-primary"></i>
-                    <span>Grafik Penjualan Harian (7 Hari Terakhir)</span>
+                    <span class="fw-semibold">Grafik Penjualan Harian (7 Hari Terakhir)</span>
                 </div>
                 <small class="text-muted">Total Omset</small>
             </div>
             <div class="card-body">
-                <canvas id="dailySalesChart" height="260"></canvas>
+                <div style="position: relative; height: 260px; width: 100%;">
+                    <canvas id="dailySalesChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Chart 2: Penjualan Bulanan -->
-    <div class="col-lg-5">
-        <div class="card h-100">
+    <div class="col-lg-5 col-12">
+        <div class="card h-100 shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
                     <i class="fa-solid fa-chart-column text-success"></i>
-                    <span>Grafik Penjualan Bulanan ({{ date('Y') }})</span>
+                    <span class="fw-semibold">Grafik Penjualan Bulanan ({{ date('Y') }})</span>
                 </div>
                 <small class="text-muted">Tahun Berjalan</small>
             </div>
             <div class="card-body">
-                <canvas id="monthlySalesChart" height="260"></canvas>
+                <div style="position: relative; height: 260px; width: 100%;">
+                    <canvas id="monthlySalesChart"></canvas>
+                </div>
             </div>
         </div>
     </div>

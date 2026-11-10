@@ -101,7 +101,7 @@
         <!-- Product Grid -->
         <div class="row g-2 overflow-auto" style="max-height: calc(100vh - 280px);" id="productGrid">
             @foreach($products as $prod)
-            <div class="col-md-4 col-sm-6 col-12 product-item"
+            <div class="col-xxl-4 col-sm-6 col-12 product-item"
                  data-id="{{ $prod->id }}"
                  data-nama="{{ strtolower($prod->nama_barang) }}"
                  data-kode="{{ strtolower($prod->kode_barang) }}"
@@ -207,24 +207,24 @@
                 <!-- Payment Method -->
                 <div class="mb-3">
                     <label class="form-label small fw-semibold text-muted mb-1">Metode Pembayaran:</label>
-                    <div class="btn-group w-100" role="group">
+                    <div class="btn-group w-100 flex-wrap" role="group">
                         <input type="radio" class="btn-check" name="payment_method" id="payTunai" value="Tunai" checked onchange="onPaymentMethodChange()">
-                        <label class="btn btn-outline-primary btn-sm py-2" for="payTunai">
+                        <label class="btn btn-outline-primary btn-sm py-2 px-1 flex-fill" for="payTunai">
                             <i class="fa-solid fa-money-bill-wave me-1"></i> Tunai
                         </label>
 
                         <input type="radio" class="btn-check" name="payment_method" id="payQris" value="QRIS" onchange="onPaymentMethodChange()">
-                        <label class="btn btn-outline-primary btn-sm py-2" for="payQris">
+                        <label class="btn btn-outline-primary btn-sm py-2 px-1 flex-fill" for="payQris">
                             <i class="fa-solid fa-qrcode me-1"></i> QRIS
                         </label>
 
                         <input type="radio" class="btn-check" name="payment_method" id="payTransfer" value="Transfer Bank" onchange="onPaymentMethodChange()">
-                        <label class="btn btn-outline-primary btn-sm py-2" for="payTransfer">
+                        <label class="btn btn-outline-primary btn-sm py-2 px-1 flex-fill" for="payTransfer">
                             <i class="fa-solid fa-building-columns me-1"></i> Transfer
                         </label>
 
                         <input type="radio" class="btn-check" name="payment_method" id="payDebit" value="Debit" onchange="onPaymentMethodChange()">
-                        <label class="btn btn-outline-primary btn-sm py-2" for="payDebit">
+                        <label class="btn btn-outline-primary btn-sm py-2 px-1 flex-fill" for="payDebit">
                             <i class="fa-solid fa-credit-card me-1"></i> Debit
                         </label>
                     </div>

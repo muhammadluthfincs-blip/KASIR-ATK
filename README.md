@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # ATK POS (Sistem Kasir dan Manajemen Stok Alat Tulis Kantor)
 
 Aplikasi POS (Point of Sale) dan Manajemen Stok berbasis web untuk operasional toko alat tulis kantor. Dibangun menggunakan **Laravel**, **MySQL**, **Bootstrap 5**, **Font Awesome**, dan **Chart.js**.
@@ -132,6 +131,3 @@ Aplikasi POS (Point of Sale) dan Manajemen Stok berbasis web untuk operasional t
    ```
 5. Buka browser di alamat:
    **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
-=======
-# KASIR-ATK
->>>>>>> 9b7ba31a7355c3e208d972147524fa52f2fa7d96

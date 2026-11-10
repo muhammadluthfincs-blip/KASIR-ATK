@@ -41,12 +41,23 @@
             --atk-border: #e2e8f0;
         }
 
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--atk-body-bg);
             color: var(--atk-text-main);
             min-height: 100vh;
-            overflow-x: hidden;
+            width: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         /* Sidebar Styling */
@@ -55,7 +66,7 @@
             width: 260px;
             background-color: var(--atk-sidebar-bg);
             color: #f1f5f9;
-            transition: all 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: fixed;
             top: 0;
             bottom: 0;
@@ -173,25 +184,47 @@
         /* Main Content Layout */
         #content-wrapper {
             margin-left: 260px;
-            transition: all 0.3s ease;
+            width: calc(100% - 260px);
+            max-width: calc(100% - 260px);
+            min-width: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* Desktop Collapsed Sidebar State */
+        body.sidebar-collapsed #sidebar-wrapper {
+            transform: translateX(-100%);
+        }
+
+        body.sidebar-collapsed #content-wrapper {
+            margin-left: 0;
+            width: 100%;
+            max-width: 100%;
         }
 
         .top-navbar {
             background-color: #ffffff;
             border-bottom: 1px solid var(--atk-border);
-            padding: 12px 28px;
+            padding: 12px clamp(14px, 2vw, 28px);
             position: sticky;
             top: 0;
             z-index: 1020;
             box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
         }
 
         .main-container {
-            padding: 28px;
+            padding: clamp(14px, 2vw, 24px);
             flex-grow: 1;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
         }
 
         /* Card Styles */
@@ -200,20 +233,23 @@
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.03);
             background-color: #ffffff;
+            max-width: 100%;
+            min-width: 0;
         }
 
         .card-header {
             background-color: transparent;
             border-bottom: 1px solid var(--atk-border);
-            padding: 16px 20px;
+            padding: 14px 18px;
             font-weight: 600;
         }
 
         /* Stat Cards */
         .stat-card {
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px 14px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
         }
 
         .stat-card:hover {
@@ -222,13 +258,14 @@
         }
 
         .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.15rem;
+            flex-shrink: 0;
         }
 
         /* Buttons & Badges */
@@ -278,13 +315,15 @@
         /* Mobile Responsive */
         @media (max-width: 991.98px) {
             #sidebar-wrapper {
-                margin-left: -260px;
+                transform: translateX(-100%);
             }
             #sidebar-wrapper.show {
-                margin-left: 0;
+                transform: translateX(0);
             }
             #content-wrapper {
                 margin-left: 0;
+                width: 100%;
+                max-width: 100%;
             }
             .sidebar-backdrop {
                 position: fixed;
@@ -404,19 +443,19 @@
     <!-- Main Content -->
     <div id="content-wrapper">
         <!-- Top Navbar -->
-        <header class="top-navbar d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-light border d-lg-none" id="sidebarToggle" type="button">
+        <header class="top-navbar d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2 gap-sm-3 min-w-0">
+                <button class="btn btn-light border" id="sidebarToggle" type="button" title="Buka/Tutup Menu Sidebar">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-                <div class="d-none d-sm-block">
-                    <h5 class="mb-0 fw-bold text-dark">@yield('page_title', 'ATK POS')</h5>
-                    <small class="text-muted">@yield('page_subtitle', 'Sistem Kasir dan Stok Alat Tulis Kantor')</small>
+                <div class="d-none d-sm-block text-truncate">
+                    <h5 class="mb-0 fw-bold text-dark text-truncate">@yield('page_title', 'ATK POS')</h5>
+                    <small class="text-muted text-truncate d-block">@yield('page_subtitle', 'Sistem Kasir dan Stok Alat Tulis Kantor')</small>
                 </div>
             </div>
 
-            <div class="d-flex align-items-center gap-3">
-                <a href="{{ route('pos.index') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-2 shadow-sm">
+            <div class="d-flex align-items-center gap-2 gap-md-3 ms-auto">
+                <a href="{{ route('pos.index') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-2 shadow-sm text-nowrap">
                     <i class="fa-solid fa-cash-register"></i>
                     <span class="d-none d-md-inline">Buka Kasir POS</span>
                 </a>
@@ -424,7 +463,7 @@
                 <div class="dropdown">
                     <button class="btn btn-light border dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-circle-user text-primary"></i>
-                        <span class="d-none d-sm-inline fw-medium">{{ auth()->user()->name }}</span>
+                        <span class="d-none d-sm-inline fw-medium text-truncate" style="max-width: 130px;">{{ auth()->user()->name }}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                         <li class="px-3 py-2 border-bottom">
@@ -502,17 +541,27 @@
     <!-- Bootstrap 5.3 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Sidebar Mobile Toggle Script -->
+    <!-- Sidebar Responsive Toggle Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const sidebar = document.getElementById('sidebar-wrapper');
             const toggle = document.getElementById('sidebarToggle');
             const backdrop = document.getElementById('sidebarBackdrop');
 
+            // Restore desktop sidebar collapsed state from localStorage
+            if (window.innerWidth >= 992 && localStorage.getItem('atk_sidebar_collapsed') === 'true') {
+                document.body.classList.add('sidebar-collapsed');
+            }
+
             if (toggle) {
                 toggle.addEventListener('click', function () {
-                    sidebar.classList.toggle('show');
-                    backdrop.classList.toggle('show');
+                    if (window.innerWidth < 992) {
+                        sidebar.classList.toggle('show');
+                        backdrop.classList.toggle('show');
+                    } else {
+                        document.body.classList.toggle('sidebar-collapsed');
+                        localStorage.setItem('atk_sidebar_collapsed', document.body.classList.contains('sidebar-collapsed') ? 'true' : 'false');
+                    }
                 });
             }
 
@@ -522,6 +571,21 @@
                     backdrop.classList.remove('show');
                 });
             }
+
+            // Window resize handler
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 992) {
+                    if (backdrop) backdrop.classList.remove('show');
+                    if (sidebar) sidebar.classList.remove('show');
+                    if (localStorage.getItem('atk_sidebar_collapsed') === 'true') {
+                        document.body.classList.add('sidebar-collapsed');
+                    } else {
+                        document.body.classList.remove('sidebar-collapsed');
+                    }
+                } else {
+                    document.body.classList.remove('sidebar-collapsed');
+                }
+            });
         });
 
         // Helper for formatting Rupiah in Javascript
