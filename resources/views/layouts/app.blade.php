@@ -376,12 +376,17 @@
                 <i class="fa-solid fa-receipt"></i>
                 <span>Riwayat Penjualan</span>
             </a>
+            <a href="{{ route('cashier.closing') }}" class="sidebar-nav-item {{ request()->routeIs('cashier.closing*') ? 'active' : '' }}">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <span>Laporan Harian Kasir</span>
+                <span class="badge bg-success ms-auto" style="font-size: 0.65rem;">Shift</span>
+            </a>
 
             @if(auth()->user()->role === 'admin')
             <div class="menu-header">Manajemen Master</div>
             <a href="{{ route('products.index') }}" class="sidebar-nav-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-boxes-stacked"></i>
-                <span>Data Barang</span>
+                <span>Katalog Data Barang</span>
             </a>
             <a href="{{ route('categories.index') }}" class="sidebar-nav-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-tags"></i>
@@ -403,7 +408,7 @@
             </a>
             <a href="{{ route('stocks.index') }}" class="sidebar-nav-item {{ request()->routeIs('stocks.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-clipboard-check"></i>
-                <span>Manajemen Stok</span>
+                <span>Cek Stok & Kartu Stok</span>
             </a>
 
             <div class="menu-header">Laporan & Pengaturan</div>
@@ -411,24 +416,50 @@
                 <i class="fa-solid fa-chart-line"></i>
                 <span>Laporan & Keuntungan</span>
             </a>
+            <a href="{{ route('notifications.index') }}" class="sidebar-nav-item {{ request()->routeIs('notifications.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-bell"></i>
+                <span>Pusat Notifikasi</span>
+            </a>
             <a href="{{ route('users.index') }}" class="sidebar-nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
                 <i class="fa-solid fa-users-gear"></i>
                 <span>Pengguna Sistem</span>
+            </a>
+            @else
+            <div class="menu-header">Kontrol Barang & Stok</div>
+            <a href="{{ route('products.index') }}" class="sidebar-nav-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Katalog Data Barang</span>
+            </a>
+            <a href="{{ route('stocks.index') }}" class="sidebar-nav-item {{ request()->routeIs('stocks.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <span>Cek Stok & Kartu Stok</span>
+            </a>
+
+            <div class="menu-header">Notifikasi & Log</div>
+            <a href="{{ route('notifications.index') }}" class="sidebar-nav-item {{ request()->routeIs('notifications.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-bell"></i>
+                <span>Pusat Notifikasi</span>
             </a>
             @endif
         </div>
 
         <!-- Sidebar User Footer -->
         <div class="sidebar-user-box">
-            <div class="user-avatar">
+            <div class="user-avatar" style="background: #2563eb; font-weight: 700;">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
             <div class="flex-grow-1 overflow-hidden">
                 <div class="text-white text-truncate fw-semibold" style="font-size: 0.88rem;">{{ auth()->user()->name }}</div>
                 <div class="text-secondary d-flex align-items-center gap-1" style="font-size: 0.75rem;">
-                    <span class="badge {{ auth()->user()->role === 'admin' ? 'bg-danger' : 'bg-primary' }}" style="font-size: 0.65rem;">
-                        {{ strtoupper(auth()->user()->role) }}
+                    @if(auth()->user()->role === 'kasir')
+                    <span class="badge bg-primary px-2 py-0" style="font-size: 0.65rem;">
+                        KASIR <span class="text-success ms-1">●</span> Online
                     </span>
+                    @else
+                    <span class="badge bg-danger px-2 py-0" style="font-size: 0.65rem;">
+                        ADMIN <span class="text-success ms-1">●</span> Online
+                    </span>
+                    @endif
                 </div>
             </div>
             <form action="{{ route('logout') }}" method="POST" class="m-0">
@@ -455,20 +486,44 @@
             </div>
 
             <div class="d-flex align-items-center gap-2 gap-md-3 ms-auto">
-                <a href="{{ route('pos.index') }}" class="btn btn-sm btn-primary d-flex align-items-center gap-2 shadow-sm text-nowrap">
-                    <i class="fa-solid fa-cash-register"></i>
-                    <span class="d-none d-md-inline">Buka Kasir POS</span>
+                <!-- Live Realtime Clock Pill -->
+                <div class="d-none d-lg-flex align-items-center gap-2 px-3 py-1 bg-light border rounded-pill text-secondary" style="font-size: 0.8rem;" id="liveClockPill">
+                    <i class="fa-regular fa-clock text-primary"></i>
+                    <span id="liveClockText" class="font-monospace"></span>
+                </div>
+
+                <!-- Notification Bell -->
+                <a href="{{ route('notifications.index') }}" class="btn btn-light border position-relative rounded-3 p-2 text-secondary" title="Pusat Notifikasi">
+                    <i class="fa-solid fa-bell"></i>
+                    @php
+                        $notifCount = \App\Models\Product::where('stok', '<=', \Illuminate\Support\Facades\DB::raw('stok_minimum'))->count();
+                    @endphp
+                    @if($notifCount > 0 && !session('notifications_marked_read'))
+                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                        <span class="visually-hidden">Notifikasi</span>
+                    </span>
+                    @endif
                 </a>
 
+                <!-- Buka Kasir Button -->
+                <a href="{{ route('pos.index') }}" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm text-nowrap px-3 py-2 fw-medium" style="border-radius: 8px;">
+                    <i class="fa-solid fa-cash-register"></i>
+                    <span>Buka Kasir</span>
+                </a>
+
+                <!-- User Dropdown -->
                 <div class="dropdown">
                     <button class="btn btn-light border dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
-                        <i class="fa-solid fa-circle-user text-primary"></i>
+                        <span style="width: 26px; height: 26px; border-radius: 50%; background: #2563eb; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        </span>
                         <span class="d-none d-sm-inline fw-medium text-truncate" style="max-width: 130px;">{{ auth()->user()->name }}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                         <li class="px-3 py-2 border-bottom">
                             <div class="fw-semibold">{{ auth()->user()->name }}</div>
                             <small class="text-muted">{{ auth()->user()->email }}</small>
+                            <div><span class="badge {{ auth()->user()->role === 'admin' ? 'bg-danger' : 'bg-primary' }} mt-1" style="font-size: 0.65rem;">{{ strtoupper(auth()->user()->role) }}</span></div>
                         </li>
                         @if(auth()->user()->role === 'admin')
                         <li>
@@ -482,6 +537,16 @@
                             </a>
                         </li>
                         @endif
+                        <li>
+                            <a class="dropdown-item py-2" href="{{ route('cashier.closing') }}">
+                                <i class="fa-solid fa-file-invoice-dollar me-2 text-success"></i> Laporan Harian (Closing)
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item py-2" href="{{ route('notifications.index') }}">
+                                <i class="fa-solid fa-bell me-2 text-warning"></i> Pusat Notifikasi
+                            </a>
+                        </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
@@ -587,6 +652,28 @@
                 }
             });
         });
+
+        // Real-time Indonesian Clock for Top Navbar
+        function updateLiveClock() {
+            const clockEl = document.getElementById('liveClockText');
+            if (!clockEl) return;
+            const now = new Date();
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+            const dayName = days[now.getDay()];
+            const dateNum = now.getDate();
+            const monthName = months[now.getMonth()];
+            const year = now.getFullYear();
+
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            clockEl.textContent = `${dayName}, ${dateNum} ${monthName} ${year} • ${hours}:${minutes}:${seconds} WIB`;
+        }
+        setInterval(updateLiveClock, 1000);
+        updateLiveClock();
 
         // Helper for formatting Rupiah in Javascript
         function formatRupiah(amount) {

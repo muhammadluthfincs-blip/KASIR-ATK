@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CashierReportController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReportController;
@@ -46,14 +48,34 @@ Route::middleware('auth')->group(function () {
     Route::get('/sales/{sale}/receipt', [SaleController::class, 'receipt'])->name('sales.receipt');
     Route::get('/products/search-json', [ProductController::class, 'searchJson'])->name('products.search-json');
 
+    // Laporan Harian Kasir (Shift Closing)
+    Route::get('/cashier/closing', [CashierReportController::class, 'closing'])->name('cashier.closing');
+    Route::get('/cashier/closing/print-thermal', [CashierReportController::class, 'printThermal'])->name('cashier.closing.print-thermal');
+    Route::get('/cashier/closing/print-a4', [CashierReportController::class, 'printA4'])->name('cashier.closing.print-a4');
+
+    // Pusat Notifikasi Sistem
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
+
+    // Katalog Produk & Cek Stok (Accessible by both Admin and Kasir)
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('/stocks', [StockController::class, 'index'])->name('stocks.index');
+    Route::get('/stocks/{product}/card', [StockController::class, 'card'])->name('stocks.card');
+
     // Admin Only Routes
     Route::middleware('role:admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Master Data
+        // Master Data CRUD (Admin only)
         Route::resource('categories', CategoryController::class)->except(['create', 'show', 'edit']);
         Route::resource('suppliers', SupplierController::class)->except(['create', 'show', 'edit']);
-        Route::resource('products', ProductController::class);
+        Route::get('/products-create', [ProductController::class, 'create'])->name('products.create');
+        Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+        Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+        Route::patch('/products/{product}', [ProductController::class, 'update']);
+        Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
         // Purchases / Barang Masuk
         Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
@@ -67,10 +89,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/stock-outs/create', [StockOutController::class, 'create'])->name('stock-outs.create');
         Route::post('/stock-outs', [StockOutController::class, 'store'])->name('stock-outs.store');
         Route::get('/stock-outs/{stockOut}', [StockOutController::class, 'show'])->name('stock-outs.show');
-
-        // Stock Management & Stock Card
-        Route::get('/stocks', [StockController::class, 'index'])->name('stocks.index');
-        Route::get('/stocks/{product}/card', [StockController::class, 'card'])->name('stocks.card');
 
         // Reports & Exports
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
