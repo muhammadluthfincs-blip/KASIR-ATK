@@ -95,25 +95,35 @@
     .category-pill {
         cursor: pointer;
         border-radius: 20px;
-        font-size: 0.85rem;
-        padding: 6px 16px;
+        font-size: 0.83rem;
+        font-weight: 500;
+        padding: 7px 16px;
         white-space: nowrap;
-        transition: all 0.2s ease;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         border: 1px solid #e2e8f0;
         background: #ffffff;
-        color: #475569;
+        color: #334155;
         flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
     .category-pill:hover {
         background: #f1f5f9;
-        color: #1e293b;
+        border-color: #cbd5e1;
+        color: #0f172a;
+        transform: translateY(-1px);
     }
     .category-pill.active {
         background: #2563eb;
-        color: #ffffff;
+        color: #ffffff !important;
         border-color: #2563eb;
         font-weight: 600;
-        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+        transform: translateY(-1px);
+    }
+    .category-pill.active i {
+        color: #ffffff !important;
     }
     .cart-table th {
         font-size: 0.8rem;
@@ -146,25 +156,58 @@
     <!-- Left Column: Product Search & Catalog -->
     <div class="col-xxl-8 col-xl-7 col-lg-7 col-12">
         <!-- Search & Barcode Input -->
-        <div class="card mb-3 shadow-sm">
-            <div class="card-body p-3">
+        <div class="card mb-3 shadow-sm border-0 bg-white" style="border: 1px solid #e2e8f0 !important;">
+            <div class="card-body p-2 p-sm-3">
                 <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0 text-primary">
-                        <i class="fa-solid fa-barcode fs-5"></i>
+                    <span class="input-group-text bg-white border-end-0 text-primary ps-3">
+                        <i class="fa-solid fa-barcode fs-4"></i>
                     </span>
-                    <input type="text" id="posSearchInput" class="form-control form-control-lg border-start-0 ps-0" placeholder="Ketik nama barang, kode, atau scan barcode... (Tekan Enter)" autofocus autocomplete="off">
-                    <button class="btn btn-outline-secondary" type="button" id="clearSearchBtn">
+                    <input type="text" id="posSearchInput" class="form-control form-control-lg border-start-0 border-end-0 ps-1" placeholder="Ketik nama, kode barang, atau scan barcode..." autofocus autocomplete="off">
+                    <span class="input-group-text bg-white border-start-0 border-end-0 text-muted px-2 d-none d-sm-flex align-items-center">
+                        <kbd class="bg-light text-secondary border font-monospace shadow-sm" style="font-size: 0.72rem; padding: 2px 6px;">F2</kbd>
+                    </span>
+                    <button class="btn btn-outline-secondary border-start-0 px-3" type="button" id="clearSearchBtn" title="Bersihkan pencarian (Esc)">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Category Pills -->
+        <!-- Category Pills with Distinctive Retail Icons -->
         <div class="d-flex align-items-center gap-2 overflow-auto pb-2 mb-3" id="categoryPills">
-            <button type="button" class="category-pill active" data-category="">Semua Kategori</button>
+            <button type="button" class="category-pill active" data-category="">
+                <i class="fa-solid fa-layer-group text-primary"></i>
+                <span>Semua Kategori</span>
+            </button>
             @foreach($categories as $cat)
-            <button type="button" class="category-pill" data-category="{{ $cat->id }}">{{ $cat->name }}</button>
+                @php
+                    $catLower = strtolower($cat->name);
+                    $icon = 'fa-tag';
+                    $color = '#64748b';
+                    if (str_contains($catLower, 'tulis') || str_contains($catLower, 'pena') || str_contains($catLower, 'pensil')) {
+                        $icon = 'fa-pen-ruler';
+                        $color = '#6366f1';
+                    } elseif (str_contains($catLower, 'kertas') || str_contains($catLower, 'buku') || str_contains($catLower, 'hvs')) {
+                        $icon = 'fa-file-lines';
+                        $color = '#0284c7';
+                    } elseif (str_contains($catLower, 'gambar') || str_contains($catLower, 'lukis') || str_contains($catLower, 'warna')) {
+                        $icon = 'fa-palette';
+                        $color = '#f59e0b';
+                    } elseif (str_contains($catLower, 'kantor') || str_contains($catLower, 'stapler') || str_contains($catLower, 'ordner')) {
+                        $icon = 'fa-briefcase';
+                        $color = '#10b981';
+                    } elseif (str_contains($catLower, 'printer') || str_contains($catLower, 'tinta') || str_contains($catLower, 'toner')) {
+                        $icon = 'fa-print';
+                        $color = '#8b5cf6';
+                    } elseif (str_contains($catLower, 'arsip') || str_contains($catLower, 'map') || str_contains($catLower, 'folder')) {
+                        $icon = 'fa-folder-open';
+                        $color = '#ec4899';
+                    }
+                @endphp
+                <button type="button" class="category-pill" data-category="{{ $cat->id }}">
+                    <i class="fa-solid {{ $icon }}" style="color: {{ $color }};"></i>
+                    <span>{{ $cat->name }}</span>
+                </button>
             @endforeach
         </div>
 
@@ -270,24 +313,32 @@
 
             <!-- Checkout Details Form -->
             <div class="card-footer bg-light p-3 border-top">
-                <!-- Subtotal, Diskon & Total -->
-                <div class="mb-3">
+                <!-- Subtotal, Diskon & Total Tagihan Highlight -->
+                <div class="mb-2">
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <span class="text-muted small">Subtotal Belanja:</span>
                         <strong class="text-dark" id="subtotalDisplay">Rp 0</strong>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="text-muted small">Diskon Transaksi (Rp):</span>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Diskon Transaksi:</span>
                         <div class="input-group input-group-sm" style="width: 140px;">
                             <span class="input-group-text bg-white">Rp</span>
                             <input type="number" id="discountInput" class="form-control text-end" value="0" min="0" step="500" oninput="calculateTotal()">
                         </div>
                     </div>
+                </div>
 
-                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                        <span class="fw-bold fs-5 text-dark">Total Tagihan:</span>
-                        <span class="fw-bold fs-4 text-primary" id="totalBayarDisplay">Rp 0</span>
+                <!-- Total Tagihan Banner (High Contrast Modern Retail) -->
+                <div class="rounded-3 p-3 mb-3 text-white shadow-sm" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-uppercase fw-semibold d-block text-white-50" style="font-size: 0.72rem; letter-spacing: 0.8px;">Total Tagihan</span>
+                            <small class="text-white-50" style="font-size: 0.75rem;">Harus Dibayar</small>
+                        </div>
+                        <div class="text-end">
+                            <span class="fw-bold text-white font-monospace" id="totalBayarDisplay" style="font-size: 1.65rem;">Rp 0</span>
+                        </div>
                     </div>
                 </div>
 
@@ -340,16 +391,29 @@
                 </div>
 
                 <!-- Kembalian -->
-                <div class="p-3 bg-white rounded-3 border mb-3 d-flex justify-content-between align-items-center">
-                    <span class="fw-semibold text-muted">Kembalian:</span>
-                    <strong class="fs-5 text-success" id="changeDisplay">Rp 0</strong>
+                <div class="p-3 rounded-3 border mb-3 d-flex justify-content-between align-items-center" id="changeBox" style="background-color: #f0fdf4; border-color: #bbf7d0 !important;">
+                    <div>
+                        <span class="fw-bold text-success text-uppercase d-block" style="font-size: 0.72rem; letter-spacing: 0.5px;">Uang Kembalian:</span>
+                        <small class="text-muted" style="font-size: 0.75rem;">Diserahkan ke pembeli</small>
+                    </div>
+                    <strong class="fs-4 text-success font-monospace" id="changeDisplay">Rp 0</strong>
                 </div>
 
                 <!-- Submit Button -->
                 <button type="button" id="btnCheckout" class="btn btn-primary btn-lg w-100 d-flex justify-content-center align-items-center gap-2 py-3 shadow" onclick="submitCheckout()" disabled>
                     <i class="fa-solid fa-circle-check fs-5"></i>
                     <span class="fw-bold">Bayar & Simpan Transaksi</span>
+                    <kbd class="bg-white bg-opacity-25 text-white border-0 rounded px-2 py-0 ms-1 fw-bold" style="font-size: 0.72rem;">F9</kbd>
                 </button>
+
+                <!-- Keyboard Shortcut Guide Bar -->
+                <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 text-muted small mt-2 pt-1" style="font-size: 0.72rem;">
+                    <span><kbd class="bg-white border text-secondary shadow-sm">F2</kbd> Cari Barang</span>
+                    <span>&bull;</span>
+                    <span><kbd class="bg-white border text-secondary shadow-sm">F4</kbd> Uang Tunai</span>
+                    <span>&bull;</span>
+                    <span><kbd class="bg-white border text-secondary shadow-sm">F9</kbd> Bayar</span>
+                </div>
             </div>
         </div>
     </div>
@@ -652,12 +716,21 @@
         const change = cash - total;
 
         const changeDisplay = document.getElementById('changeDisplay');
+        const changeBox = document.getElementById('changeBox');
         if (change >= 0) {
             changeDisplay.innerText = 'Rp ' + Number(change).toLocaleString('id-ID');
-            changeDisplay.className = 'fs-5 text-success';
+            changeDisplay.className = 'fs-4 text-success font-monospace fw-bold';
+            if (changeBox) {
+                changeBox.style.backgroundColor = '#f0fdf4';
+                changeBox.style.borderColor = '#bbf7d0';
+            }
         } else {
             changeDisplay.innerText = 'Kurang Rp ' + Number(Math.abs(change)).toLocaleString('id-ID');
-            changeDisplay.className = 'fs-5 text-danger';
+            changeDisplay.className = 'fs-4 text-danger font-monospace fw-bold';
+            if (changeBox) {
+                changeBox.style.backgroundColor = '#fef2f2';
+                changeBox.style.borderColor = '#fecaca';
+            }
         }
     }
 
@@ -782,7 +855,7 @@
             alert('Terjadi kesalahan jaringan atau server: ' + error.message);
         } finally {
             btn.disabled = false;
-            btn.innerHTML = `<i class="fa-solid fa-circle-check fs-5"></i> <span class="fw-bold">Bayar & Simpan Transaksi</span>`;
+            btn.innerHTML = `<i class="fa-solid fa-circle-check fs-5"></i> <span class="fw-bold">Bayar & Simpan Transaksi</span> <kbd class="bg-white bg-opacity-25 text-white border-0 rounded px-2 py-0 ms-1 fw-bold" style="font-size: 0.72rem;">F9</kbd>`;
         }
     }
 
@@ -799,6 +872,45 @@
         renderCart();
         window.location.reload(); // Refresh next TRX number & updated stock
     }
+
+    // Global Cashier Keyboard Shortcuts (F2, F4, F9, Esc)
+    window.addEventListener('keydown', function (e) {
+        // F2: Focus Search Barcode
+        if (e.key === 'F2') {
+            e.preventDefault();
+            const searchInput = document.getElementById('posSearchInput');
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.select();
+            }
+        }
+        // F4: Focus Cash Input / Uang Tunai
+        else if (e.key === 'F4') {
+            e.preventDefault();
+            const cashInput = document.getElementById('cashInput');
+            const tunaiBox = document.getElementById('tunaiBox');
+            if (cashInput && tunaiBox && tunaiBox.style.display !== 'none') {
+                cashInput.focus();
+                cashInput.select();
+            }
+        }
+        // F9: Bayar & Simpan Transaksi
+        else if (e.key === 'F9') {
+            e.preventDefault();
+            const btn = document.getElementById('btnCheckout');
+            if (btn && !btn.disabled) {
+                submitCheckout();
+            }
+        }
+        // Escape: Clear search box
+        else if (e.key === 'Escape') {
+            const searchInput = document.getElementById('posSearchInput');
+            if (searchInput && searchInput === document.activeElement && searchInput.value) {
+                searchInput.value = '';
+                filterProducts();
+            }
+        }
+    });
 </script>
 @endsection
 
