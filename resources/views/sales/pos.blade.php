@@ -162,11 +162,8 @@
                     <span class="input-group-text bg-white border-end-0 text-primary ps-3">
                         <i class="fa-solid fa-barcode fs-4"></i>
                     </span>
-                    <input type="text" id="posSearchInput" class="form-control form-control-lg border-start-0 border-end-0 ps-1" placeholder="Ketik nama, kode barang, atau scan barcode..." autofocus autocomplete="off">
-                    <span class="input-group-text bg-white border-start-0 border-end-0 text-muted px-2 d-none d-sm-flex align-items-center">
-                        <kbd class="bg-light text-secondary border font-monospace shadow-sm" style="font-size: 0.72rem; padding: 2px 6px;">F2</kbd>
-                    </span>
-                    <button class="btn btn-outline-secondary border-start-0 px-3" type="button" id="clearSearchBtn" title="Bersihkan pencarian (Esc)">
+                    <input type="text" id="posSearchInput" class="form-control form-control-lg border-start-0 ps-1" placeholder="Ketik nama, kode barang, atau scan barcode..." autofocus autocomplete="off">
+                    <button class="btn btn-outline-secondary" type="button" id="clearSearchBtn" title="Bersihkan pencarian">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
@@ -403,17 +400,7 @@
                 <button type="button" id="btnCheckout" class="btn btn-primary btn-lg w-100 d-flex justify-content-center align-items-center gap-2 py-3 shadow" onclick="submitCheckout()" disabled>
                     <i class="fa-solid fa-circle-check fs-5"></i>
                     <span class="fw-bold">Bayar & Simpan Transaksi</span>
-                    <kbd class="bg-white bg-opacity-25 text-white border-0 rounded px-2 py-0 ms-1 fw-bold" style="font-size: 0.72rem;">F9</kbd>
                 </button>
-
-                <!-- Keyboard Shortcut Guide Bar -->
-                <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 text-muted small mt-2 pt-1" style="font-size: 0.72rem;">
-                    <span><kbd class="bg-white border text-secondary shadow-sm">F2</kbd> Cari Barang</span>
-                    <span>&bull;</span>
-                    <span><kbd class="bg-white border text-secondary shadow-sm">F4</kbd> Uang Tunai</span>
-                    <span>&bull;</span>
-                    <span><kbd class="bg-white border text-secondary shadow-sm">F9</kbd> Bayar</span>
-                </div>
             </div>
         </div>
     </div>
@@ -855,7 +842,7 @@
             alert('Terjadi kesalahan jaringan atau server: ' + error.message);
         } finally {
             btn.disabled = false;
-            btn.innerHTML = `<i class="fa-solid fa-circle-check fs-5"></i> <span class="fw-bold">Bayar & Simpan Transaksi</span> <kbd class="bg-white bg-opacity-25 text-white border-0 rounded px-2 py-0 ms-1 fw-bold" style="font-size: 0.72rem;">F9</kbd>`;
+            btn.innerHTML = `<i class="fa-solid fa-circle-check fs-5"></i> <span class="fw-bold">Bayar & Simpan Transaksi</span>`;
         }
     }
 
@@ -872,45 +859,6 @@
         renderCart();
         window.location.reload(); // Refresh next TRX number & updated stock
     }
-
-    // Global Cashier Keyboard Shortcuts (F2, F4, F9, Esc)
-    window.addEventListener('keydown', function (e) {
-        // F2: Focus Search Barcode
-        if (e.key === 'F2') {
-            e.preventDefault();
-            const searchInput = document.getElementById('posSearchInput');
-            if (searchInput) {
-                searchInput.focus();
-                searchInput.select();
-            }
-        }
-        // F4: Focus Cash Input / Uang Tunai
-        else if (e.key === 'F4') {
-            e.preventDefault();
-            const cashInput = document.getElementById('cashInput');
-            const tunaiBox = document.getElementById('tunaiBox');
-            if (cashInput && tunaiBox && tunaiBox.style.display !== 'none') {
-                cashInput.focus();
-                cashInput.select();
-            }
-        }
-        // F9: Bayar & Simpan Transaksi
-        else if (e.key === 'F9') {
-            e.preventDefault();
-            const btn = document.getElementById('btnCheckout');
-            if (btn && !btn.disabled) {
-                submitCheckout();
-            }
-        }
-        // Escape: Clear search box
-        else if (e.key === 'Escape') {
-            const searchInput = document.getElementById('posSearchInput');
-            if (searchInput && searchInput === document.activeElement && searchInput.value) {
-                searchInput.value = '';
-                filterProducts();
-            }
-        }
-    });
 </script>
 @endsection
 
