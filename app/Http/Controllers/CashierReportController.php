@@ -143,3 +143,4 @@ class CashierReportController extends Controller
         ));
     }
 }
+

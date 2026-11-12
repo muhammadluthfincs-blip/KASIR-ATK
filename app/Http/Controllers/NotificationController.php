@@ -84,3 +84,4 @@ class NotificationController extends Controller
         return redirect()->route('notifications.index')->with('success', 'Semua pemberitahuan sistem telah ditandai sebagai sudah dibaca.');
     }
 }
+
